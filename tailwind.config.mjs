@@ -1,5 +1,7 @@
 import tailwindcssAnimate from 'tailwindcss-animate'
 import typography from '@tailwindcss/typography'
+import flowbite from 'flowbite-react/tailwind'
+import daisyui from 'daisyui'
 
 /** @type {import('tailwindcss').Config} */
 const config = {
@@ -8,9 +10,14 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+    flowbite.content(),
   ],
   darkMode: ['selector', '[data-theme="dark"]'],
-  plugins: [tailwindcssAnimate, typography],
+  plugins: [tailwindcssAnimate, typography, flowbite.plugin(), daisyui],
+  daisyui: {
+    themes: ['synthwave', 'bumblebee'],
+    darkTheme: 'synthwave', // Set this if you want to override default dark mode behavior
+  },
   prefix: '',
   safelist: [
     'lg:col-span-4',
@@ -94,8 +101,8 @@ const config = {
         warning: 'hsl(var(--warning))',
       },
       fontFamily: {
-        mono: ['var(--font-geist-mono)'],
-        sans: ['var(--font-geist-sans)'],
+        mono: ['Satoshi', 'var(--font-geist-mono)'],
+        sans: ['Satoshi', 'var(--font-geist-sans)'],
       },
       keyframes: {
         'accordion-down': {

@@ -7,13 +7,45 @@ import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
+import { NavbarBlock } from '@/blocks/Navbar/Component'
+import { HeroBlock } from './HeroBlock/Component'
+import { VisionBlock } from './VisionBlock/Component'
+import { PropertiesBlock } from './PropertiesBlock/component'
+import { FeatureBlock } from './FeatureBlock/component'
+import { HowItWorksBlock } from './HowItWorksBlock/component'
+import { BlogBlock } from './BlogBlock/component'
+import { AboutHeroBlock } from './AboutHero/component'
+import { VisionMissionBlock } from './VisionMission/component'
+import { AmenitiesBlock } from './Amenities/component'
+import { AgentsBlock } from './Agents/component'
+import { TestimonialsBlock } from './Testimonials/component'
+import { CallToActionNewBlock } from './CallToActionNew/component'
+import { ContactHeroBlock } from './ContactHero/component'
+import { ContactUsFormBlock } from './ContactUsForm/component'
+import { FAQBlock } from './FAQ/component'
 
 const blockComponents = {
+  properties: PropertiesBlock,
+  vision: VisionBlock,
+  hero: HeroBlock,
+  navbar: NavbarBlock,
   archive: ArchiveBlock,
   content: ContentBlock,
   cta: CallToActionBlock,
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
+  feature: FeatureBlock,
+  'how-it-works': HowItWorksBlock,
+  blog: BlogBlock,
+  'about-hero': AboutHeroBlock,
+  'vision-mission': VisionMissionBlock,
+  amenities: AmenitiesBlock,
+  agents: AgentsBlock,
+  testimonials: TestimonialsBlock,
+  'call-to-action-new': CallToActionNewBlock,
+  'contact-hero': ContactHeroBlock,
+  'contact-us-form': ContactUsFormBlock,
+  faq: FAQBlock,
 }
 
 export const RenderBlocks: React.FC<{

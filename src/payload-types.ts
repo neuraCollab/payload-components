@@ -71,6 +71,9 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    properties: Property;
+    agents: Agent;
+    testimonials: Testimonial;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -87,6 +90,9 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    properties: PropertiesSelect<false> | PropertiesSelect<true>;
+    agents: AgentsSelect<false> | AgentsSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -97,7 +103,7 @@ export interface Config {
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   globals: {
     header: Header;
@@ -145,7 +151,7 @@ export interface UserAuthOperations {
  * via the `definition` "pages".
  */
 export interface Page {
-  id: string;
+  id: number;
   title: string;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
@@ -172,11 +178,11 @@ export interface Page {
             reference?:
               | ({
                   relationTo: 'pages';
-                  value: string | Page;
+                  value: number | Page;
                 } | null)
               | ({
                   relationTo: 'posts';
-                  value: string | Post;
+                  value: number | Post;
                 } | null);
             url?: string | null;
             label: string;
@@ -188,15 +194,239 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
-    media?: (string | null) | Media;
+    media?: (number | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout: (
+    | CallToActionBlock
+    | ContentBlock
+    | MediaBlock
+    | ArchiveBlock
+    | FormBlock
+    | NavbarBlock
+    | {
+        headline: string;
+        highlight?: string | null;
+        subheadline?: string | null;
+        image: number | Media;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'hero';
+      }
+    | {
+        title: string;
+        subtitle?: string | null;
+        items?:
+          | {
+              icon?: string | null;
+              title?: string | null;
+              description?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        buttonText?: string | null;
+        buttonLink?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'vision';
+      }
+    | {
+        blockType: 'properties';
+        title: string;
+        /**
+         * Например: /properties
+         */
+        showAllLink?: string | null;
+        /**
+         * Выберите объекты недвижимости для отображения в блоке
+         */
+        properties?: (number | Property)[] | null;
+        layout?: ('grid' | 'list') | null;
+        /**
+         * Минимум 3, максимум 12 объектов
+         */
+        itemsPerPage: number;
+        enableFilters?: boolean | null;
+        filters?: {
+          priceRange?: boolean | null;
+          propertyType?: boolean | null;
+          bedrooms?: boolean | null;
+          bathrooms?: boolean | null;
+          area?: boolean | null;
+        };
+        id?: string | null;
+        blockName?: string | null;
+      }
+    | {
+        blockType: 'feature';
+        label: string;
+        title: string;
+        features: {
+          icon:
+            | 'user-check'
+            | 'settings'
+            | 'trending-up'
+            | 'refresh-cw'
+            | 'users'
+            | 'shield-check'
+            | 'home'
+            | 'key'
+            | 'map-pin'
+            | 'phone'
+            | 'mail'
+            | 'calendar'
+            | 'heart'
+            | 'star'
+            | 'check-circle'
+            | 'award';
+          title: string;
+          description: string;
+          id?: string | null;
+        }[];
+        id?: string | null;
+        blockName?: string | null;
+      }
+    | {
+        blockType: 'how-it-works';
+        label: string;
+        title: string;
+        steps: {
+          /**
+           * Введите номер иконки от 1 до 6
+           */
+          icon: string;
+          title: string;
+          description: string;
+          id?: string | null;
+        }[];
+        id?: string | null;
+        blockName?: string | null;
+      }
+    | {
+        blockType: 'blog';
+        title: string;
+        subtitle?: string | null;
+        /**
+         * Выберите посты для отображения в блоке
+         */
+        posts?: (number | Post)[] | null;
+        /**
+         * Например: /posts
+         */
+        showAllLink?: string | null;
+        /**
+         * Минимум 3, максимум 12 постов
+         */
+        itemsPerPage: number;
+        id?: string | null;
+        blockName?: string | null;
+      }
+    | {
+        blockType: 'about-hero';
+        label: string;
+        title: string;
+        images: {
+          image: number | Media;
+          id?: string | null;
+        }[];
+        id?: string | null;
+        blockName?: string | null;
+      }
+    | {
+        blockType: 'vision-mission';
+        title: string;
+        description: string;
+        buttonText?: string | null;
+        buttonLink?: string | null;
+        stats: {
+          value: string;
+          label: string;
+          id?: string | null;
+        }[];
+        id?: string | null;
+        blockName?: string | null;
+      }
+    | {
+        blockType: 'amenities';
+        label: string;
+        title: string;
+        image: number | Media;
+        amenities: {
+          icon: 'wifi' | 'shield' | 'gym' | 'clean';
+          title: string;
+          id?: string | null;
+        }[];
+        id?: string | null;
+        blockName?: string | null;
+      }
+    | {
+        blockType: 'agents';
+        label: string;
+        title: string;
+        agents: (number | Agent)[];
+        id?: string | null;
+        blockName?: string | null;
+      }
+    | {
+        blockType: 'testimonials';
+        label: string;
+        title: string;
+        testimonials: (number | Testimonial)[];
+        id?: string | null;
+        blockName?: string | null;
+      }
+    | {
+        blockType: 'call-to-action-new';
+        label: string;
+        title: string;
+        buttonText: string;
+        buttonLink: string;
+        id?: string | null;
+        blockName?: string | null;
+      }
+    | {
+        blockType: 'contact-hero';
+        label: string;
+        title: string;
+        image: number | Media;
+        email: string;
+        phone: string;
+        location: string;
+        id?: string | null;
+        blockName?: string | null;
+      }
+    | {
+        blockType: 'contact-us-form';
+        label: string;
+        title: string;
+        form: number | Form;
+        id?: string | null;
+        blockName?: string | null;
+      }
+    | {
+        blockType: 'faq';
+        label: string;
+        title: string;
+        items: {
+          question: string;
+          answer: string;
+          id?: string | null;
+        }[];
+        id?: string | null;
+        blockName?: string | null;
+      }
+    | {
+        blockType: 'property-features';
+        property: number | Property;
+        id?: string | null;
+        blockName?: string | null;
+      }
+  )[];
   meta?: {
     title?: string | null;
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
     description?: string | null;
   };
   publishedAt?: string | null;
@@ -211,9 +441,11 @@ export interface Page {
  * via the `definition` "posts".
  */
 export interface Post {
-  id: string;
+  id: number;
   title: string;
-  heroImage?: (string | null) | Media;
+  image: number | Media;
+  publishedDate: string;
+  excerpt: string;
   content: {
     root: {
       type: string;
@@ -229,36 +461,24 @@ export interface Post {
     };
     [k: string]: unknown;
   };
-  relatedPosts?: (string | Post)[] | null;
-  categories?: (string | Category)[] | null;
+  categories?: (number | Category)[] | null;
+  author: number | User;
+  status: 'draft' | 'published';
   meta?: {
     title?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (string | null) | Media;
     description?: string | null;
+    image?: (number | null) | Media;
   };
-  publishedAt?: string | null;
-  authors?: (string | User)[] | null;
-  populatedAuthors?:
-    | {
-        id?: string | null;
-        name?: string | null;
-      }[]
-    | null;
-  slug?: string | null;
-  slugLock?: boolean | null;
+  slug: string;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
+  id: number;
   alt?: string | null;
   caption?: {
     root: {
@@ -350,14 +570,14 @@ export interface Media {
  * via the `definition` "categories".
  */
 export interface Category {
-  id: string;
+  id: number;
   title: string;
   slug?: string | null;
   slugLock?: boolean | null;
-  parent?: (string | null) | Category;
+  parent?: (number | null) | Category;
   breadcrumbs?:
     | {
-        doc?: (string | null) | Category;
+        doc?: (number | null) | Category;
         url?: string | null;
         label?: string | null;
         id?: string | null;
@@ -371,7 +591,7 @@ export interface Category {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
   name?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -412,11 +632,11 @@ export interface CallToActionBlock {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -462,11 +682,11 @@ export interface ContentBlock {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -487,7 +707,7 @@ export interface ContentBlock {
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
-  media: string | Media;
+  media: number | Media;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
@@ -514,12 +734,12 @@ export interface ArchiveBlock {
   } | null;
   populateBy?: ('collection' | 'selection') | null;
   relationTo?: 'posts' | null;
-  categories?: (string | Category)[] | null;
+  categories?: (number | Category)[] | null;
   limit?: number | null;
   selectedDocs?:
     | {
         relationTo: 'posts';
-        value: string | Post;
+        value: number | Post;
       }[]
     | null;
   id?: string | null;
@@ -531,7 +751,7 @@ export interface ArchiveBlock {
  * via the `definition` "FormBlock".
  */
 export interface FormBlock {
-  form: string | Form;
+  form: number | Form;
   enableIntro?: boolean | null;
   introContent?: {
     root: {
@@ -557,7 +777,7 @@ export interface FormBlock {
  * via the `definition` "forms".
  */
 export interface Form {
-  id: string;
+  id: number;
   title: string;
   fields?:
     | (
@@ -727,10 +947,105 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NavbarBlock".
+ */
+export interface NavbarBlock {
+  logoText: string;
+  links: {
+    text: string;
+    url: string;
+    id?: string | null;
+  }[];
+  avatar: number | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'navbar';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "properties".
+ */
+export interface Property {
+  id: number;
+  title: string;
+  slug: string;
+  address: string;
+  price: number;
+  type: 'sale' | 'rent';
+  bedrooms: number;
+  bathrooms: number;
+  area: number;
+  images: {
+    image: number | Media;
+    id?: string | null;
+  }[];
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  features?:
+    | {
+        feature: string;
+        id?: string | null;
+      }[]
+    | null;
+  status?: ('active' | 'sold' | 'draft') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "agents".
+ */
+export interface Agent {
+  id: number;
+  name: string;
+  position: string;
+  image: number | Media;
+  email: string;
+  phone: string;
+  description?: string | null;
+  socialLinks?:
+    | {
+        platform?: ('linkedin' | 'twitter' | 'facebook' | 'instagram') | null;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  name: string;
+  location: string;
+  image: number | Media;
+  text: string;
+  rating: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
-  id: string;
+  id: number;
   /**
    * You will need to rebuild the website when changing this field.
    */
@@ -740,11 +1055,11 @@ export interface Redirect {
     reference?:
       | ({
           relationTo: 'pages';
-          value: string | Page;
+          value: number | Page;
         } | null)
       | ({
           relationTo: 'posts';
-          value: string | Post;
+          value: number | Post;
         } | null);
     url?: string | null;
   };
@@ -756,8 +1071,8 @@ export interface Redirect {
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
-  id: string;
-  form: string | Form;
+  id: number;
+  form: number | Form;
   submissionData?:
     | {
         field: string;
@@ -775,18 +1090,18 @@ export interface FormSubmission {
  * via the `definition` "search".
  */
 export interface Search {
-  id: string;
+  id: number;
   title?: string | null;
   priority?: number | null;
   doc: {
     relationTo: 'posts';
-    value: string | Post;
+    value: number | Post;
   };
   slug?: string | null;
   meta?: {
     title?: string | null;
     description?: string | null;
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
   };
   categories?:
     | {
@@ -803,7 +1118,7 @@ export interface Search {
  * via the `definition` "payload-jobs".
  */
 export interface PayloadJob {
-  id: string;
+  id: number;
   /**
    * Input data provided to the job
    */
@@ -895,52 +1210,64 @@ export interface PayloadJob {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
         relationTo: 'pages';
-        value: string | Page;
+        value: number | Page;
       } | null)
     | ({
         relationTo: 'posts';
-        value: string | Post;
+        value: number | Post;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
       } | null)
     | ({
         relationTo: 'categories';
-        value: string | Category;
+        value: number | Category;
       } | null)
     | ({
         relationTo: 'users';
-        value: string | User;
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'properties';
+        value: number | Property;
+      } | null)
+    | ({
+        relationTo: 'agents';
+        value: number | Agent;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: number | Testimonial;
       } | null)
     | ({
         relationTo: 'redirects';
-        value: string | Redirect;
+        value: number | Redirect;
       } | null)
     | ({
         relationTo: 'forms';
-        value: string | Form;
+        value: number | Form;
       } | null)
     | ({
         relationTo: 'form-submissions';
-        value: string | FormSubmission;
+        value: number | FormSubmission;
       } | null)
     | ({
         relationTo: 'search';
-        value: string | Search;
+        value: number | Search;
       } | null)
     | ({
         relationTo: 'payload-jobs';
-        value: string | PayloadJob;
+        value: number | PayloadJob;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -950,10 +1277,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -973,7 +1300,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -1015,6 +1342,231 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        navbar?: T | NavbarBlockSelect<T>;
+        hero?:
+          | T
+          | {
+              headline?: T;
+              highlight?: T;
+              subheadline?: T;
+              image?: T;
+              id?: T;
+              blockName?: T;
+            };
+        vision?:
+          | T
+          | {
+              title?: T;
+              subtitle?: T;
+              items?:
+                | T
+                | {
+                    icon?: T;
+                    title?: T;
+                    description?: T;
+                    id?: T;
+                  };
+              buttonText?: T;
+              buttonLink?: T;
+              id?: T;
+              blockName?: T;
+            };
+        properties?:
+          | T
+          | {
+              blockType?: T;
+              title?: T;
+              showAllLink?: T;
+              properties?: T;
+              layout?: T;
+              itemsPerPage?: T;
+              enableFilters?: T;
+              filters?:
+                | T
+                | {
+                    priceRange?: T;
+                    propertyType?: T;
+                    bedrooms?: T;
+                    bathrooms?: T;
+                    area?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        feature?:
+          | T
+          | {
+              blockType?: T;
+              label?: T;
+              title?: T;
+              features?:
+                | T
+                | {
+                    icon?: T;
+                    title?: T;
+                    description?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        'how-it-works'?:
+          | T
+          | {
+              blockType?: T;
+              label?: T;
+              title?: T;
+              steps?:
+                | T
+                | {
+                    icon?: T;
+                    title?: T;
+                    description?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        blog?:
+          | T
+          | {
+              blockType?: T;
+              title?: T;
+              subtitle?: T;
+              posts?: T;
+              showAllLink?: T;
+              itemsPerPage?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'about-hero'?:
+          | T
+          | {
+              blockType?: T;
+              label?: T;
+              title?: T;
+              images?:
+                | T
+                | {
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        'vision-mission'?:
+          | T
+          | {
+              blockType?: T;
+              title?: T;
+              description?: T;
+              buttonText?: T;
+              buttonLink?: T;
+              stats?:
+                | T
+                | {
+                    value?: T;
+                    label?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        amenities?:
+          | T
+          | {
+              blockType?: T;
+              label?: T;
+              title?: T;
+              image?: T;
+              amenities?:
+                | T
+                | {
+                    icon?: T;
+                    title?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        agents?:
+          | T
+          | {
+              blockType?: T;
+              label?: T;
+              title?: T;
+              agents?: T;
+              id?: T;
+              blockName?: T;
+            };
+        testimonials?:
+          | T
+          | {
+              blockType?: T;
+              label?: T;
+              title?: T;
+              testimonials?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'call-to-action-new'?:
+          | T
+          | {
+              blockType?: T;
+              label?: T;
+              title?: T;
+              buttonText?: T;
+              buttonLink?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'contact-hero'?:
+          | T
+          | {
+              blockType?: T;
+              label?: T;
+              title?: T;
+              image?: T;
+              email?: T;
+              phone?: T;
+              location?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'contact-us-form'?:
+          | T
+          | {
+              blockType?: T;
+              label?: T;
+              title?: T;
+              form?: T;
+              id?: T;
+              blockName?: T;
+            };
+        faq?:
+          | T
+          | {
+              blockType?: T;
+              label?: T;
+              title?: T;
+              items?:
+                | T
+                | {
+                    question?: T;
+                    answer?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        'property-features'?:
+          | T
+          | {
+              blockType?: T;
+              property?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   meta?:
     | T
@@ -1116,34 +1668,44 @@ export interface FormBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NavbarBlock_select".
+ */
+export interface NavbarBlockSelect<T extends boolean = true> {
+  logoText?: T;
+  links?:
+    | T
+    | {
+        text?: T;
+        url?: T;
+        id?: T;
+      };
+  avatar?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
   title?: T;
-  heroImage?: T;
+  image?: T;
+  publishedDate?: T;
+  excerpt?: T;
   content?: T;
-  relatedPosts?: T;
   categories?: T;
+  author?: T;
+  status?: T;
   meta?:
     | T
     | {
         title?: T;
-        image?: T;
         description?: T;
-      };
-  publishedAt?: T;
-  authors?: T;
-  populatedAuthors?:
-    | T
-    | {
-        id?: T;
-        name?: T;
+        image?: T;
       };
   slug?: T;
-  slugLock?: T;
   updatedAt?: T;
   createdAt?: T;
-  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1273,6 +1835,70 @@ export interface UsersSelect<T extends boolean = true> {
   hash?: T;
   loginAttempts?: T;
   lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "properties_select".
+ */
+export interface PropertiesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  address?: T;
+  price?: T;
+  type?: T;
+  bedrooms?: T;
+  bathrooms?: T;
+  area?: T;
+  images?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  description?: T;
+  features?:
+    | T
+    | {
+        feature?: T;
+        id?: T;
+      };
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "agents_select".
+ */
+export interface AgentsSelect<T extends boolean = true> {
+  name?: T;
+  position?: T;
+  image?: T;
+  email?: T;
+  phone?: T;
+  description?: T;
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  name?: T;
+  location?: T;
+  image?: T;
+  text?: T;
+  rating?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1532,7 +2158,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  * via the `definition` "header".
  */
 export interface Header {
-  id: string;
+  id: number;
   navItems?:
     | {
         link: {
@@ -1541,11 +2167,11 @@ export interface Header {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -1561,7 +2187,7 @@ export interface Header {
  * via the `definition` "footer".
  */
 export interface Footer {
-  id: string;
+  id: number;
   navItems?:
     | {
         link: {
@@ -1570,11 +2196,11 @@ export interface Footer {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -1639,55 +2265,14 @@ export interface TaskSchedulePublish {
   input: {
     type?: ('publish' | 'unpublish') | null;
     locale?: string | null;
-    doc?:
-      | ({
-          relationTo: 'pages';
-          value: string | Page;
-        } | null)
-      | ({
-          relationTo: 'posts';
-          value: string | Post;
-        } | null);
+    doc?: {
+      relationTo: 'pages';
+      value: number | Page;
+    } | null;
     global?: string | null;
-    user?: (string | null) | User;
+    user?: (number | null) | User;
   };
   output?: unknown;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "BannerBlock".
- */
-export interface BannerBlock {
-  style: 'info' | 'warning' | 'error' | 'success';
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'banner';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CodeBlock".
- */
-export interface CodeBlock {
-  language?: ('typescript' | 'javascript' | 'css') | null;
-  code: string;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'code';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

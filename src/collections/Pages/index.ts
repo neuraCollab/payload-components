@@ -20,6 +20,23 @@ import {
   OverviewField,
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
+import { NavbarBlock } from '@/blocks/Navbar/config'
+import { HeroBlock } from '@/blocks/HeroBlock/config'
+import { VisionBlock } from '@/blocks/VisionBlock/config'
+import { PropertiesBlock } from '@/blocks/PropertiesBlock/config'
+import { FeatureBlock } from '../../blocks/FeatureBlock/config'
+import { HowItWorksBlock } from '../../blocks/HowItWorksBlock/config'
+import { BlogBlock } from '../../blocks/BlogBlock/config'
+import { AboutHeroBlock } from '../../blocks/AboutHero/config'
+import { VisionMissionBlock } from '@/blocks/VisionMission/config'
+import { AmenitiesBlock } from '../../blocks/Amenities/config'
+import { AgentsBlock } from '../../blocks/Agents/config'
+import { TestimonialsBlock } from '../../blocks/Testimonials/config'
+import { CallToActionNewBlock } from '../../blocks/CallToActionNew/config'
+import { ContactHeroBlock } from '../../blocks/ContactHero/config'
+import { ContactUsFormBlock } from '../../blocks/ContactUsForm/config'
+import { FAQBlock } from '../../blocks/FAQ/config'
+import { PropertyFeaturesBlock } from '@/blocks/PropertyFeatures/config'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -75,7 +92,30 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock],
+              blocks: [
+                CallToAction,
+                Content,
+                MediaBlock,
+                Archive,
+                FormBlock,
+                NavbarBlock,
+                HeroBlock,
+                VisionBlock,
+                PropertiesBlock,
+                FeatureBlock,
+                HowItWorksBlock,
+                BlogBlock,
+                AboutHeroBlock,
+                VisionMissionBlock,
+                AmenitiesBlock,
+                AgentsBlock,
+                TestimonialsBlock,
+                CallToActionNewBlock,
+                ContactHeroBlock,
+                ContactUsFormBlock,
+                FAQBlock,
+                PropertyFeaturesBlock,
+              ],
               required: true,
               admin: {
                 initCollapsed: true,
