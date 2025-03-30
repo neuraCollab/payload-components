@@ -215,16 +215,16 @@ export interface Page {
     | {
         title: string;
         subtitle?: string | null;
+        buttonText?: string | null;
+        buttonLink?: string | null;
         items?:
           | {
-              icon?: string | null;
-              title?: string | null;
-              description?: string | null;
+              icon: string;
+              title: string;
+              description: string;
               id?: string | null;
             }[]
           | null;
-        buttonText?: string | null;
-        buttonLink?: string | null;
         id?: string | null;
         blockName?: string | null;
         blockType: 'vision';
@@ -1358,6 +1358,8 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               title?: T;
               subtitle?: T;
+              buttonText?: T;
+              buttonLink?: T;
               items?:
                 | T
                 | {
@@ -1366,8 +1368,6 @@ export interface PagesSelect<T extends boolean = true> {
                     description?: T;
                     id?: T;
                   };
-              buttonText?: T;
-              buttonLink?: T;
               id?: T;
               blockName?: T;
             };
